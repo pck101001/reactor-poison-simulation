@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reactor Simulation</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script src="/static/js/handler.js"></script>
+</head>
+
+<body>
+    <h1>Reactor Simulation</h1>
+    <div style="margin-top: 20px;">
+        <input type="number" id="simulationTime" placeholder="Enter simulation time in days" min="0">
+        <button id="extendSimulation">Extend Simulation</button>
+        <button id="clearSimulation">Clear Simulation</button>
+    </div>
+    <div style="margin-top: 20px;">
+        <label for="reactorState">Reactor Power (%): </label>
+        <input type="range" id="reactorState" min="0" max="1" value="1" step="0.01">
+        <span id="reactorStateValue">100%</span>
+    </div>
+    <div style="margin-top: 20px;">
+        <label for="animationSpeed">Animation Speed: </label>
+        <input type="range" id="animationSpeed" min="10" max="200" value="50">
+    </div>
+    <div id="concentrationPlot" style="width: 90vw; height: 45vh; border: 1px solid #ccc; margin-top: 20px;"></div>
+    <div id="reactivityPlot" style="width: 90vw; height: 45vh; border: 1px solid #ccc; margin-top: 20px;"></div>
+</body>
+
+</html>
