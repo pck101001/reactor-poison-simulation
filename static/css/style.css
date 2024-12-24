@@ -1,17 +1,119 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 50px;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 95%;
+    max-width: 1200px;
+}
+
+.left-panel {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+.right-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#description {
+    background-color: #e7e7e7;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    text-align: justify;
+}
+
+#description p {
+    margin: 0 0 10px 0;
+}
+
+#description ul {
+    margin: 0 0 10px
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+input[type="number"],
+button,
+input[type="range"] {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+}
+
+input[type="number"] {
+    margin-bottom: 10px;
+}
+
+button {
+    width: 48%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button#clearSimulation {
+    background-color: #f44336;
+    float: right;
+}
+
+button#clearSimulation:hover {
+    background-color: #da190b;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#reactorStateValue {
+    margin-left: 10px;
+}
+
+.plot {
+    flex: 1;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
 }
 
 #concentrationPlot,
 #reactivityPlot {
-    width: 90vw;
-    height: 45vh;
-    border: 1px solid #ccc;
-    margin-top: 20px;
+    width: 100%;
+    height: 100%;
 }

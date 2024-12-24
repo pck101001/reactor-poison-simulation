@@ -11,23 +11,46 @@
 </head>
 
 <body>
-    <h1>Reactor Simulation</h1>
-    <div style="margin-top: 20px;">
-        <input type="number" id="simulationTime" placeholder="Enter simulation time in days" min="0">
-        <button id="extendSimulation">Extend Simulation</button>
-        <button id="clearSimulation">Clear Simulation</button>
+    <div class="container">
+        <div class="left-panel">
+            <h1>Reactor Simulation</h1>
+
+            <div id="description">
+                <p>This tool simulates the concentration changes of nuclear poisons (Iodine-135, Xenon-135,
+                    Promethium-149, and Samarium-149) in a nuclear reactor over time. Users can:</p>
+                <ul>
+                    <li>Input the simulation time in days</li>
+                    <li>Adjust the reactor power percentage</li>
+                    <li>Control the animation speed of the simulation</li>
+                </ul>
+                <p>The 'Extend Simulation' button adds more data to the existing plot, while 'Clear Simulation' resets
+                    the simulation. Use this tool to understand how these poisons affect reactor behavior under
+                    different power conditions.</p>
+            </div>
+
+            <div class="control-group">
+                <input type="number" id="simulationTime" placeholder="Enter simulation time in days" min="0">
+                <button id="extendSimulation">Extend Simulation</button>
+                <button id="clearSimulation">Clear Simulation</button>
+            </div>
+
+            <div class="control-group">
+                <label for="reactorState">Reactor Power (%): </label>
+                <input type="range" id="reactorState" min="0" max="1" value="1" step="0.01">
+                <span id="reactorStateValue">100%</span>
+            </div>
+
+            <div class="control-group">
+                <label for="animationSpeed">Animation Speed: </label>
+                <input type="range" id="animationSpeed" min="10" max="200" value="50">
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div id="concentrationPlot" class="plot"></div>
+            <div id="reactivityPlot" class="plot"></div>
+        </div>
     </div>
-    <div style="margin-top: 20px;">
-        <label for="reactorState">Reactor Power (%): </label>
-        <input type="range" id="reactorState" min="0" max="1" value="1" step="0.01">
-        <span id="reactorStateValue">100%</span>
-    </div>
-    <div style="margin-top: 20px;">
-        <label for="animationSpeed">Animation Speed: </label>
-        <input type="range" id="animationSpeed" min="10" max="200" value="50">
-    </div>
-    <div id="concentrationPlot" style="width: 90vw; height: 45vh; border: 1px solid #ccc; margin-top: 20px;"></div>
-    <div id="reactivityPlot" style="width: 90vw; height: 45vh; border: 1px solid #ccc; margin-top: 20px;"></div>
 </body>
 
 </html>
