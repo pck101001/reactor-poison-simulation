@@ -117,3 +117,44 @@ label {
     width: 100%;
     height: 100%;
 }
+
+#equilibriumValues,
+#maxValues {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#equilibriumValues h3,
+#maxValues h3 {
+    margin-top: 0;
+}
+
+#equilibriumValues p,
+#maxValues p {
+    margin: 5px 0;
+}
+
+#equilibriumValues p strong,
+#maxValues p strong {
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+}
+
+#equilibriumValues p span,
+#maxValues p span {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+
+#maxValues p span#maxXeConcentrationTime,
+#maxValues p span#maxXeReactivityTime {
+    display: block;
+    text-align: right;
+    margin-left: 165px;
+}

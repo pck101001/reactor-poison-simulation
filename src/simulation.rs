@@ -22,6 +22,21 @@ pub struct SimulationParams {
     last_xenon: f64,
     last_promethium: f64,
     last_samarium: f64,
+    phi_0: f64,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct EquilibriumValues {
+    iodine_infinity: f64,
+    xenon_infinity: f64,
+    promethium_infinity: f64,
+    samarium_infinity: f64,
+    xe_reactivity_infinity: f64,
+    sm_reactivity_infinity: f64,
+    max_xenon: f64,
+    max_xe_reactivity: f64,
+    max_xenon_time: f64,
+    max_xe_reactivity_time: f64,
 }
 
 pub async fn simulation_data(
@@ -56,6 +71,10 @@ pub async fn simulation_data(
             .get("lastSamarium")
             .and_then(|s| s.parse::<f64>().ok())
             .unwrap_or(0.0),
+        phi_0: params
+            .get("phi_0")
+            .and_then(|s| s.parse::<f64>().ok())
+            .unwrap_or(PHI_0),
     };
 
     let mut data = SimulationData {
@@ -75,8 +94,7 @@ pub async fn simulation_data(
     let mut n_sm = simulation_params.last_samarium;
     let dt = 60.0;
     let t_end = (simulation_params.last_time + simulation_params.time) * SECONDS_PER_DAY;
-
-    let phi = PHI_0 * simulation_params.state;
+    let phi = simulation_params.phi_0 * simulation_params.state;
 
     while t <= t_end {
         let dn_i_dt = GAMMA_I * SIGMA_F * phi - LAMBDA_I * n_i;
@@ -109,6 +127,74 @@ pub async fn simulation_data(
     }
 
     axum::Json(data)
+}
+
+pub async fn equilibrium_values(
+    Query(params): Query<HashMap<String, String>>,
+) -> impl axum::response::IntoResponse {
+    let phi_0 = params
+        .get("phi_0")
+        .and_then(|s| s.parse::<f64>().ok())
+        .unwrap_or(PHI_0);
+
+    let iodine_infinity = GAMMA_I * SIGMA_F * phi_0 / LAMBDA_I;
+    let xenon_infinity = (GAMMA_I + GAMMA_XE) * SIGMA_F * phi_0 / (LAMBDA_XE + SIGMA_A_XE * phi_0);
+    let promethium_infinity = GAMMA_PM * SIGMA_F * phi_0 / LAMBDA_PM;
+    let samarium_infinity = GAMMA_PM * SIGMA_F / SIGMA_A_SM;
+
+    let xe_reactivity_infinity =
+        -((GAMMA_I + GAMMA_XE) * SIGMA_F / SIGMA_A) * phi_0 / (phi_0 + LAMBDA_XE / SIGMA_A_XE);
+    let sm_reactivity_infinity = -samarium_infinity * SIGMA_A_SM / SIGMA_A;
+
+    let dt = 60.0;
+    let mut t = 0.0;
+    let mut n_i = iodine_infinity;
+    let mut n_xe = xenon_infinity;
+    let mut max_xenon = n_xe;
+    let mut max_xe_reactivity = xe_reactivity_infinity;
+    let mut max_xenon_time = 0.0;
+    let mut max_xe_reactivity_time = 0.0;
+
+    while t < SECONDS_PER_DAY * 10.0 {
+        let dn_i_dt = -LAMBDA_I * n_i;
+        let dn_xe_dt = LAMBDA_I * n_i - LAMBDA_XE * n_xe;
+
+        let new_n_i = n_i + dn_i_dt * dt;
+        let new_n_xe = n_xe + dn_xe_dt * dt;
+        let new_xe_reactivity = -SIGMA_A_XE * new_n_xe / SIGMA_A;
+
+        if new_n_xe > max_xenon {
+            max_xenon = new_n_xe;
+            max_xenon_time = t / SECONDS_PER_DAY;
+        }
+        if new_xe_reactivity.abs() > max_xe_reactivity.abs() {
+            max_xe_reactivity = new_xe_reactivity;
+            max_xe_reactivity_time = t / SECONDS_PER_DAY;
+        }
+
+        if new_n_xe < n_xe {
+            break;
+        }
+
+        n_i = new_n_i;
+        n_xe = new_n_xe;
+        t += dt;
+    }
+
+    let result = EquilibriumValues {
+        iodine_infinity: iodine_infinity,
+        xenon_infinity: xenon_infinity,
+        promethium_infinity: promethium_infinity,
+        samarium_infinity: samarium_infinity,
+        xe_reactivity_infinity: xe_reactivity_infinity,
+        sm_reactivity_infinity: sm_reactivity_infinity,
+        max_xenon: max_xenon,
+        max_xe_reactivity: max_xe_reactivity,
+        max_xenon_time: max_xenon_time,
+        max_xe_reactivity_time: max_xe_reactivity_time,
+    };
+
+    axum::Json(result)
 }
 
 const GAMMA_I: f64 = 6.386e-2;

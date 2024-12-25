@@ -14,7 +14,8 @@ async fn main() {
             "/",
             get(|| async { Html(include_str!("../templates/index.html")) }),
         )
-        .route("/simulation", get(simulation::simulation_data));
+        .route("/simulation", get(simulation::simulation_data))
+        .route("/equilibrium_values", get(simulation::equilibrium_values));
 
     Server::bind(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 3000))
         .serve(app.into_make_service())

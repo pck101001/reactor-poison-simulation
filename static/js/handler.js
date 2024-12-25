@@ -5,6 +5,51 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const reactorStateSlider = document.getElementById('reactorState');
     const reactorStateValue = document.getElementById('reactorStateValue');
     const animationSpeedSlider = document.getElementById('animationSpeed');
+    const fullPowerPhiInput = document.getElementById('fullPowerPhi');
+    const initializeChartBtn = document.getElementById('initializeChart');
+    const equilibriumValuesDiv = document.getElementById('equilibriumValues');
+    const maxValuesDiv = document.getElementById('maxValues');
+    const currentPhiValue = document.getElementById('currentPhiValue');
+    let phi_0 = 2.93e13;
+
+    function updatePhi0() {
+        phi_0 = parseFloat(fullPowerPhiInput.value);
+    }
+
+    reactorStateSlider.addEventListener('input', function () {
+        const percentage = Math.round(this.value * 100);
+        reactorStateValue.textContent = `${percentage}%Φ₀=`;
+        currentPhiValue.textContent = `${(phi_0 * this.value).toExponential(3)}`;
+    });
+
+    initializeChartBtn.addEventListener('click', function () {
+        const phi_0 = parseFloat(fullPowerPhiInput.value);
+        if (isNaN(phi_0) || phi_0 <= 0) {
+            alert('Please enter a valid positive number for full power neutron flux.');
+            return;
+        }
+        updatePhi0();
+        reactorStateSlider.value = '1';
+        currentPhiValue.textContent = `${phi_0.toExponential(3)}`;
+        clearSimulation();
+        fetch(`/equilibrium_values?phi_0=${phi_0}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('eqIodine').textContent = data.iodine_infinity.toExponential(3);
+                document.getElementById('eqXenon').textContent = data.xenon_infinity.toExponential(3);
+                document.getElementById('eqPromethium').textContent = data.promethium_infinity.toExponential(3);
+                document.getElementById('eqSamarium').textContent = data.samarium_infinity.toExponential(3);
+                document.getElementById('eqXeReactivity').textContent = data.xe_reactivity_infinity.toExponential(3);
+                document.getElementById('eqSmReactivity').textContent = data.sm_reactivity_infinity.toExponential(3);
+
+                document.getElementById('maxXeConcentration').textContent = data.max_xenon.toExponential(3);
+                const maxXeConcentrationTimeHours = (data.max_xenon_time * 24).toFixed(3);
+                document.getElementById('maxXeConcentrationTime').textContent = `at ${maxXeConcentrationTimeHours} hours`;
+                document.getElementById('maxXeReactivity').textContent = data.max_xe_reactivity.toExponential(3);
+                const maxXeReactivityTimeHours = (data.max_xe_reactivity_time * 24).toFixed(3);
+                document.getElementById('maxXeReactivityTime').textContent = `at ${maxXeReactivityTimeHours} hours`;
+            });
+    });
 
     let trace1 = { x: [], y: [], mode: 'lines', name: 'Iodine-135', line: { color: '#17BECF' } };
     let trace2 = { x: [], y: [], mode: 'lines', name: 'Xenon-135', line: { color: '#7F7F7F' } };
@@ -32,12 +77,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         autosize: true
     };
 
-    const reactivityPlot = Plotly.newPlot('reactivityPlot', [trace5, trace6], reactivityLayout, { responsive: true });
-
-    reactorStateSlider.addEventListener('input', function () {
-        const percentage = Math.round(this.value * 100);
-        reactorStateValue.textContent = `${percentage}%`;
-    });
+    Plotly.newPlot('reactivityPlot', [trace5, trace6], reactivityLayout, { responsive: true });
 
     function clearSimulation() {
         if (animationFrameId !== null) {
@@ -82,7 +122,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const lastSamarium = trace4.y[trace4.y.length - 1] || 0;
         const lastTime = trace1.x[trace1.x.length - 1] || 0;
 
-        fetch(`/simulation?time=${timeToSimulate}&state=${reactorState}&lastTime=${lastTime}&lastIodine=${lastIodine}&lastXenon=${lastXenon}&lastPromethium=${lastPromethium}&lastSamarium=${lastSamarium}`)
+        fetch(`/simulation?time=${timeToSimulate}&state=${reactorState}&lastTime=${lastTime}&lastIodine=${lastIodine}&lastXenon=${lastXenon}&lastPromethium=${lastPromethium}&lastSamarium=${lastSamarium}&phi_0=${phi_0}`)
             .then(response => response.json())
             .then(data => {
                 if (animationFrameId !== null) {
