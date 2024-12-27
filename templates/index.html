@@ -15,22 +15,26 @@
         <div class="left-panel">
             <h1>Reactor Simulation</h1>
 
-            <div id="description">
-                <p>This tool simulates the concentration changes of nuclear poisons (Iodine-135, Xenon-135,
-                    Promethium-149, and Samarium-149) in a nuclear reactor over time. Users can:</p>
-                <ul>
-                    <li>Change the full power neutron flux (Φ₀) value and use the <strong>'Initialize Chart'</strong>
-                        button to calculate and display the equilibrium concentrations and maximum values after shutdown
-                        for the poisons and their reactivities</li>
-                    <li>Input the simulation time in days</li>
-                    <li>Adjust the reactor power percentage</li>
-                    <li>Control the animation speed of the simulation</li>
-                    <li>Use the <strong>'Extend Simulation'</strong> button to add more data to the existing plot</li>
-                    <li>Use the <strong>'Clear Simulation'</strong> button to reset the simulation</li>
-                </ul>
-                <p>Use this tool to understand how these poisons affect reactor behavior under different power
-                    conditions.</p>
-            </div>
+            <details id="descriptionDetails">
+                <summary><strong>Guidance</strong></summary>
+                <div id="description">
+                    <p>This tool simulates the concentration changes of nuclear poisons (Iodine-135, Xenon-135,
+                        Promethium-149, and Samarium-149) in a nuclear reactor over time. Users can:</p>
+                    <ul>
+                        <li>Change the full power neutron flux (Φ₀) value and use the <strong>'Initialize
+                                Chart'</strong> button to calculate and display the equilibrium concentrations and
+                            maximum values after shutdown for the poisons and their reactivities</li>
+                        <li>Input the simulation time in days</li>
+                        <li>Adjust the reactor power percentage</li>
+                        <li>Control the animation speed of the simulation</li>
+                        <li>Use the <strong>'Extend Simulation'</strong> button to add more data to the existing plot
+                        </li>
+                        <li>Use the <strong>'Clear Simulation'</strong> button to reset the simulation</li>
+                    </ul>
+                    <p>Use this tool to understand how these poisons affect reactor behavior under different power
+                        conditions.</p>
+                </div>
+            </details>
             <div class="control-group">
                 <label for="fullPowerPhi">Full Power Neutron Flux (Φ₀): </label>
                 <input type="number" id="fullPowerPhi" placeholder="Enter full power neutron flux" value="2.93e13">

@@ -158,3 +158,50 @@ label {
     text-align: right;
     margin-left: 165px;
 }
+
+#descriptionDetails {
+    width: 90%;
+    max-width: 600px;
+    background-color: #e7e7e7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+#descriptionDetails summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#descriptionDetails summary::-webkit-details-marker {
+    display: none;
+    /* 隐藏默认的折叠标记 */
+}
+
+#descriptionDetails summary::before {
+    content: '\25B6';
+    /* 使用Unicode字符作为折叠图标 */
+    color: #333;
+    padding-right: 5px;
+    font-size: 0.8em;
+    vertical-align: middle;
+}
+
+#descriptionDetails[open] summary::before {
+    content: '\25BC';
+    /* 当展开时更改为向下的箭头 */
+}
+
+#description {
+    padding: 10px 0 0 0;
+}
+
+#description p,
+#description ul {
+    margin: 5px 0;
+}
+
+#description ul {
+    padding-left: 20px;
+}
